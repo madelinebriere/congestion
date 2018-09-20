@@ -4,11 +4,11 @@ from mininet.net import Mininet
 from mininet.util import dumpNodeConnections
 from mininet.log import setLogLevel
 
-class NodeGenerator():
+class NodeGenerator(Topo):
     "Connect two hosts."
     def build(self):
-	host1 = self.addHost('transmitter')
-	host2 = self.addHost('receiver')
+	host1 = self.addHost('tcp-t')
+	host2 = self.addHost('tcp-r')
 	self.addLink(host1, host2)
 
 def launchNet():
