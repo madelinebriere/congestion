@@ -12,6 +12,8 @@ from time import sleep, time
 
 import sys
 
+# Authors: Maddie Briere and Jesse Yue
+
 # References:
 # - Bufferbloat by huangty (2018).
 # - Introduction to Mininet by Lantz et. al (2017).
@@ -68,13 +70,13 @@ def launchNet():
 	net = Mininet(topo, link=TCLink)
 	net.start();
 
-    # Retrieve nodes.
+    	# Retrieve nodes.
 	h1 = net.getNodeByName('tcp-t')
 	h2 = net.getNodeByName('tcp-r')
 
-    # Launch basic traffic ... measure bandwidth.
-    # Reference: How to generate traffic in a network topology.
-    # Shivakumar 2013
+    	# Launch basic traffic ... measure bandwidth.
+    	# Reference: How to generate traffic in a network topology.
+    	# Shivakumar 2013
 	print "Launching iperf: Measuring BW"
 	h2.cmd('iperf -s -w 16m -p 5001 -i 1 > iperf-recv.txt &')
 
