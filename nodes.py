@@ -78,7 +78,7 @@ def launchNet():
     	# Reference: How to generate traffic in a network topology.
     	# Shivakumar 2013
 	print "Launching iperf: Measuring BW"
-	h2.cmd('iperf -s -w 16m -p 5001 -i 1 > iperf-recv.txt &')
+	h2.cmd('iperf -s -w 16m -m 1024 -p 5001 -i 1 > iperf-recv.txt &')
 
 	print "Launching ping: Measuring RTTM"
 	h1.cmd('ping -c 7200 -i .5 -w 3 10.0.0.2 > ping-recv.txt &')
