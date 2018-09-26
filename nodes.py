@@ -53,8 +53,8 @@ class NodeGenerator(Topo):
     "Connect two hosts."
     def build(self):
 	switch = self.addSwitch('s1')
-	host1 = self.addHost('tcp-t', ip='10.0.0.1/8')
-	host2 = self.addHost('tcp-r', ip='10.0.0.2/8')
+	host1 = self.addHost('tcp-t', ip='10.0.0.1')
+	host2 = self.addHost('tcp-r', ip='10.0.0.2')
 	self.addLink(host1, switch, bw=args.bw_in, delay=args.delay_in,
 		loss = args.loss_in, max_queue_size = args.qsize_in);
 	self.addLink(host2, switch, bw=args.bw_in, delay=args.delay_in,
