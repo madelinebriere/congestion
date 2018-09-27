@@ -1,6 +1,8 @@
 #!/usr/bin/python  
 import os
 import numpy as np
+import subprocess
+
 from argparse import ArgumentParser
 
 parse = ArgumentParser(description = "Number of data points")
@@ -33,14 +35,18 @@ def simulate():
     q_min = 5
     q_max = 30
     l_min = .003
-    l_max = 30
+    l_max = 1
+    delay = '60ms'
     open('iperf-all.txt', 'w').close() #clear the file
     open('ping-all.txt', 'w').close()
+    # TODO: Set MSS.
     for i in range(bw_min, bw_max, (bw_max-bw_min)/(args.num_bw-1)):
         for j in range(q_min, q_max, (q_max-q_min)/(args.num_q-1)):
             # Ref: stackoverflow How do I generate log uniform distribution
             l = np.exp(np.random.uniform(l_min, l_max))
-            os.system('sudo python nodes.py -b %f -q %f -l %f' %(i/1000, j, l))
+            # TODO: Need to wait on this (need to wait for return).
+            os.system('sudo python nodes.py -b %f -q %f -l %f -d %s' %(i/1000, j, l, delay))
+            # TODO: Parse
             os.system('cat iperf-recv.txt >> iperf-all.txt')
             os.system('cat ping-recv.txt >> ping-all.txt')
 
