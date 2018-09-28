@@ -2,24 +2,21 @@
 Server listening on TCP port 5001
 TCP window size: 32.0 MByte
 ------------------------------------------------------------
-[  4] local 10.0.0.2 port 5001 connected with 10.0.0.1 port 52572
+[  4] local 10.0.0.2 port 5001 connected with 10.0.0.1 port 35650
 [ ID] Interval       Transfer     Bandwidth
-[  4]  0.0- 1.0 sec  58.5 KBytes   480 Kbits/sec
-[  4]  1.0- 2.0 sec  48.1 KBytes   394 Kbits/sec
-[  4]  2.0- 3.0 sec  28.3 KBytes   232 Kbits/sec
-[  4]  3.0- 4.0 sec  39.6 KBytes   324 Kbits/sec
-[  4]  4.0- 5.0 sec  39.6 KBytes   324 Kbits/sec
-[  4]  5.0- 6.0 sec  45.2 KBytes   371 Kbits/sec
-[  4]  6.0- 7.0 sec  49.5 KBytes   405 Kbits/sec
-[  4]  7.0- 8.0 sec  56.6 KBytes   463 Kbits/sec
-[  4]  8.0- 9.0 sec  60.8 KBytes   498 Kbits/sec
-[  4]  9.0-10.0 sec  73.5 KBytes   602 Kbits/sec
-[  4] 10.0-11.0 sec  65.0 KBytes   533 Kbits/sec
-[  4] 11.0-12.0 sec  53.7 KBytes   440 Kbits/sec
-[  4] 12.0-13.0 sec  83.4 KBytes   683 Kbits/sec
-[  4] 13.0-14.0 sec  66.5 KBytes   544 Kbits/sec
-[  4] 14.0-15.0 sec  69.3 KBytes   568 Kbits/sec
-[  4] 15.0-16.0 sec  63.6 KBytes   521 Kbits/sec
-[  4] 16.0-17.0 sec  62.2 KBytes   510 Kbits/sec
-[  4]  0.0-17.1 sec   972 KBytes   466 Kbits/sec
-[  4] MSS size 1448 bytes (MTU 1500 bytes, ethernet)
+[  4]  0.0- 1.0 sec   140 KBytes  1.14 Mbits/sec
+[  4]  1.0- 2.0 sec   436 KBytes  3.57 Mbits/sec
+[  4]  2.0- 3.0 sec   167 KBytes  1.37 Mbits/sec
+[  4]  3.0- 4.0 sec   154 KBytes  1.26 Mbits/sec
+[  4]  4.0- 5.0 sec   168 KBytes  1.38 Mbits/sec
+[  4]  5.0- 6.0 sec   167 KBytes  1.37 Mbits/sec
+[  4]  6.0- 7.0 sec   171 KBytes  1.40 Mbits/sec
+[  4]  7.0- 8.0 sec   117 KBytes   961 Kbits/sec
+[  4]  8.0- 9.0 sec   100 KBytes   822 Kbits/sec
+[  4]  9.0-10.0 sec   106 KBytes   869 Kbits/sec
+[  4] 10.0-11.0 sec  86.3 KBytes   707 Kbits/sec
+[  4] 11.0-12.0 sec  72.1 KBytes   591 Kbits/sec
+[  4] 12.0-13.0 sec  52.3 KBytes   429 Kbits/sec
+[  4] 13.0-14.0 sec  46.7 KBytes   382 Kbits/sec
+[  4] 14.0-15.0 sec  52.3 KBytes   429 Kbits/sec
+[  4] 15.0-16.0 sec  42.4 KBytes   348 Kbits/sec

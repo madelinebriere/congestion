@@ -57,7 +57,7 @@ def simulate():
                 subprocess.call(cmd)
                 # Parse perf file.
                 perf_file = open("output/iperf-recv.txt")
-                perf_count = 0
+                perf_count = 0.0
                 perf_total = 0
                 for perf_line in perf_file:
                     perf_parsed = perf_line.split()
@@ -73,19 +73,35 @@ def simulate():
                             perf_count+=1
                         except:
                             pass
-                perf_av = float(perf_count/perf_total)
+                perf_av = 0
+                if(perf_count!=0):
+                    perf_av = float(perf_total)/perf_count
                 perf_file.close()
 
                 # Parse ping file.
                 ping_file = open("output/ping-recv.txt")
-                ping_av = 0
+                ping_total = 0.0
+                ping_count = 0
                 for ping_line in ping_file:
                     # TODO: Get ping average
-                    pass
+                    ping_parsed = ping_line.split()
+                    if((len(ping_parsed) == 8) and
+                        ('time=' in ping_parsed[6])):
+                        try:
+                            time_parse=ping_parsed[6].split("=")
+                            ping_time = float(time_parse[1])/1000
+                            ping_total+=ping_time
+                            ping_count+=1
+                        except:
+                            pass
+                ping_av = 0
+                if(ping_count!=0):
+                    ping_av = float(ping_total)/ping_count
                 ping_file.close()
 
                 y_axis = (perf_av * ping_av)/1024
 
+                print 'Average BW(B): %f, average RTT(s): %f' %(perf_av, ping_av)
                 print 'Y_axis:   %s, X_axis: %s' % (str(y_axis), str(l))
                 os.system('echo %f, %f >> output/data.txt' %(l,y_axis))
 
