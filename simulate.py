@@ -29,7 +29,69 @@ parse.add_argument('--lsegs', '-l',
 
 args=parse.parse_args()
 
+def parse_perf_file():
+    perf_file = open("output/iperf-recv.txt")
+    perf_count = 0.0
+    perf_total = 0
+    for perf_line in perf_file:
+        perf_parsed = perf_line.split()
+        if((len(perf_parsed) == 9) and ('Kbits' in perf_parsed[8])):
+            try:
+                perf_total+=float(perf_parsed[7])*1000
+                perf_count+=1
+            except:
+                pass
+        if((len(perf_parsed) == 9) and ('Mbits' in perf_parsed[8])):
+            try:
+                perf_total+=float(perf_parsed[7])*1000000
+                perf_count+=1
+            except:
+                   pass
+    perf_av = 0
+    if(perf_count!=0):
+        perf_av = float(perf_total)/perf_count
+    perf_file.close()
+    return perf_av
+
+def parse_ping_file():
+    # Parse ping file.
+    ping_file = open("output/ping-recv.txt")
+    ping_total = 0.0
+    ping_count = 0
+    for ping_line in ping_file:
+        ping_parsed = ping_line.split()
+        if((len(ping_parsed) == 8) and
+            ('time=' in ping_parsed[6])):
+            try:
+                time_parse=ping_parsed[6].split("=")
+                ping_time = float(time_parse[1])/1000
+                ping_total+=ping_time
+                ping_count+=1
+            except:
+                pass
+    ping_av = 0
+    if(ping_count!=0):
+        ping_av = float(ping_total)/ping_count
+    ping_file.close()
+    return ping_av
+
+def run_net(l, b, q, d):
+    print "Calling subprocess for BW=%s, Q=%s, L=%s, D=%s" % (b, q, l, d)
+    cmd = ['sudo', 'python', 'nodes.py', 
+        '-b', b, '-q', q, '-l', l, '-d', d]
+    subprocess.call(cmd)
+    # Parse perf file.
+    perf_av = parse_perf_file()
+    # Parse ping file.
+    ping_av = parse_ping_file()
+    # TODO: Get MSS right.
+    toret = (perf_av * ping_av)/1448
+    return toret
+
+
 def simulate():
+    # TODO: Adjust MSS.
+    # Adjust variables to match paper
     bw_min = 10
     bw_max = 10000
     q_min = 5
@@ -50,58 +112,15 @@ def simulate():
                 b_str = str(float(i)/1000)
                 q_str = str(j)
                 l_str = str(l)
+                y_total = 0
+                y_count = 0
+                for k in range(0, 5, 1):
+                    y_total+=run_net(l_str, b_str, q_str, delay)
+                    y_count+=1
+                y_axis = y_total/y_count
 
-                print "Calling subprocess for BW=%s, Q=%s, L=%s, D=%s" % (b_str, q_str, l_str, delay)
-                cmd = ['sudo', 'python', 'nodes.py', 
-                    '-b', b_str, '-q', q_str, '-l', l_str, '-d', delay]
-                subprocess.call(cmd)
-                # Parse perf file.
-                perf_file = open("output/iperf-recv.txt")
-                perf_count = 0.0
-                perf_total = 0
-                for perf_line in perf_file:
-                    perf_parsed = perf_line.split()
-                    if((len(perf_parsed) == 9) and ('Kbits' in perf_parsed[8])):
-                        try:
-                            perf_total+=float(perf_parsed[7])*1000
-                            perf_count+=1
-                        except:
-                            pass
-                    if((len(perf_parsed) == 9) and ('Mbits' in perf_parsed[8])):
-                        try:
-                            perf_total+=float(perf_parsed[7])*1000000
-                            perf_count+=1
-                        except:
-                            pass
-                perf_av = 0
-                if(perf_count!=0):
-                    perf_av = float(perf_total)/perf_count
-                perf_file.close()
 
-                # Parse ping file.
-                ping_file = open("output/ping-recv.txt")
-                ping_total = 0.0
-                ping_count = 0
-                for ping_line in ping_file:
-                    # TODO: Get ping average
-                    ping_parsed = ping_line.split()
-                    if((len(ping_parsed) == 8) and
-                        ('time=' in ping_parsed[6])):
-                        try:
-                            time_parse=ping_parsed[6].split("=")
-                            ping_time = float(time_parse[1])/1000
-                            ping_total+=ping_time
-                            ping_count+=1
-                        except:
-                            pass
-                ping_av = 0
-                if(ping_count!=0):
-                    ping_av = float(ping_total)/ping_count
-                ping_file.close()
-
-                y_axis = (perf_av * ping_av)/1024
-
-                print 'Average BW(B): %f, average RTT(s): %f' %(perf_av, ping_av)
+                # print 'Average BW(B): %f, average RTT(s): %f' %(perf_av, ping_av)
                 print 'Y_axis:   %s, X_axis: %s' % (str(y_axis), str(l))
                 os.system('echo %f, %f >> output/data.txt' %(l,y_axis))
 
