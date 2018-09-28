@@ -11,6 +11,7 @@ from subprocess import Popen
 from time import sleep, time
 
 import sys
+import os
 
 # Authors: Maddie Briere and Jesse Yue
 
@@ -52,9 +53,9 @@ args=parse.parse_args()
 class NodeGenerator(Topo):
     "Connect two hosts."
     def build(self):
-	switch = self.addSwitch('s1')
-	host1 = self.addHost('tcp-t', ip='10.0.0.1')
-	host2 = self.addHost('tcp-r', ip='10.0.0.2')
+	switch = self.addSwitch('s0')
+	host1 = self.addHost('h1', ip='10.0.0.1')
+	host2 = self.addHost('h2', ip='10.0.0.2')
 	self.addLink(host1, switch, bw=args.bw_in, delay=args.delay_in,
 		loss = args.loss_in, max_queue_size = args.qsize_in);
 	self.addLink(host2, switch, bw=args.bw_in, delay=args.delay_in,
@@ -62,34 +63,33 @@ class NodeGenerator(Topo):
 
 def launchNet():
 	"Create and test a 2-node network"
-	print "Starting network"
 	seconds = 3600
 	start = time()
 
 	topo = NodeGenerator()
 	net = Mininet(topo, link=TCLink)
+
+	print "Starting network"
 	net.start();
 
-    	# Retrieve nodes.
-	h1 = net.getNodeByName('tcp-t')
-	h2 = net.getNodeByName('tcp-r')
+    # Retrieve nodes.
+	h1 = net.getNodeByName('h1')
+	h2 = net.getNodeByName('h2')
 
 	# Launch basic traffic ... measure bandwidth.
 	# Reference: How to generate traffic in a network topology.
 	# Shivakumar 2013
-	#
 	print "Launching iperf: Measuring BW"
-
-	h2.cmd('iperf -s -w 32m -m 1024 -p 5001 -i 1 > iperf-recv.txt &')
+	h2.cmd('iperf -s -w 32m -m 1024 -p 5001 -i 1 > output/iperf-recv.txt &')
 
 	# Send 3600 packets
 	# Or Run for 3600 seconds
 	print "Launching ping: Measuring RTTM"
-	h1.cmd('ping -c 3600 -i 1 -w 3600 10.0.0.2 > ping-recv.txt &')
+	h1.cmd('ping -c 30 -i 1 -w 30 10.0.0.2 > output/ping-recv.txt &')
 
 	print "Streaming large file"
 	h2.cmd('nc -l 5001 > /dev/null/')
-	h1.cmd('nc 10.0.0.2 5001 < big_file.txt')
+	h1.cmd('nc 10.0.0.2 5001 < input/big_file.txt')
 
 	net.stop()
 
