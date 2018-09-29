@@ -2,6 +2,7 @@
 import os
 import numpy as np
 import subprocess
+import math
 
 from argparse import ArgumentParser
 
@@ -11,14 +12,14 @@ parse.add_argument('--bwsegs', '-b',
 	type = int,
 	action = "store",
 	help="Number of bandwidth slices",
-	default = 7)
+	default = 3)
 
 parse.add_argument('--qsegs', '-q',
 	dest="num_q",
 	type = int,
 	action="store",
 	help="Number of queue slices",
-	default = 4)
+	default = 2)
 
 parse.add_argument('--lsegs', '-l',
 	dest="num_l",
@@ -90,39 +91,36 @@ def run_net(l, b, q, d):
 
 
 def simulate():
-    # TODO: Adjust MSS.
-    # Adjust variables to match paper
+    # Adjust variables.
+    # TODO: Need just 28 data points. More accurate.
     bw_min = 10
     bw_max = 10000
     q_min = 5
     q_max = 30
-    l_min = .003 
-    l_max = 1.0
-    delay = '60ms'
+    l_min = math.log(0.01, math.e) # e^l_min = .01
+    l_max = math.log(5.0, math.e) #e^l_max = 5
+    delay = '15ms' # | -- 15 -- | -- 15 -- | --> 60ms
     open('output/data.txt', 'w').close()
     open('output/iperf-recv.txt', 'w').close() 
     open('output/ping-recv.txt', 'w').close()
 
     try:
-        for i in range(bw_max, bw_min, -(bw_max-bw_min)/(args.num_bw)):
-            for j in range(q_max, q_min, -(q_max-q_min)/(args.num_q)):
-                # Ref: stackoverflow How do I generate log uniform distribution
-                # TODO: Potentially fix?
-                l = np.exp(np.random.uniform(l_min, l_max))
+        for l in np.logspace(l_min, l_max, args.num_l, base=math.e):
+            l_str = str(l)
+            y_total=0
+            y_count=0
+            # Average over range of bandwidths.
+            for i in range(bw_max, bw_min-1, -(bw_max-bw_min)/(args.num_bw)):
                 b_str = str(float(i)/1000)
-                q_str = str(j)
-                l_str = str(l)
-                y_total = 0
-                y_count = 0
-                for k in range(0, 5, 1):
+                # Average over range of queue sizes.
+                for j in range(q_max, q_min-1, -(q_max-q_min)/(args.num_q)):
+                    q_str = str(j)
                     y_total+=run_net(l_str, b_str, q_str, delay)
                     y_count+=1
-                y_axis = y_total/y_count
+            y_axis = y_total/y_count
 
-
-                # print 'Average BW(B): %f, average RTT(s): %f' %(perf_av, ping_av)
-                print 'Y_axis:   %s, X_axis: %s' % (str(y_axis), str(l))
-                os.system('echo %f, %f >> output/data.txt' %(l,y_axis))
+            print 'Averaged Iteration ... X_axis:   %f, Y_axis: %f' % (l, y_axis)
+            os.system('echo %f, %f >> output/data.txt' %(l,y_axis))
 
     except Exception as inst:
         print('Exiting program: %s' % type(inst))

@@ -85,7 +85,7 @@ def launchNet():
 	# Send 3600 packets
 	# Or Run for 3600 seconds
 	print "Launching ping: Measuring RTTM"
-	h1.cmd('ping -c 30 -i 1 -w 30 10.0.0.2 > output/ping-recv.txt &')
+	h1.cmd('ping -c 2000 -i 1 10.0.0.2 > output/ping-recv.txt &')
 
 	print "Streaming large file"
 	h2.cmd('nc -l 5001 > /dev/null/')
