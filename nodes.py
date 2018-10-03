@@ -72,6 +72,12 @@ def launchNet():
 	print "Starting network"
 	net.start();
 
+	print "exec tc_cmd.sh"
+	loss_str = "%f%%" % args.loss_in
+	rate_str = "%fMbit" % args.bw_in
+	os.system("bash tc_cmd.sh %s %s %s %s" % (args.qsize_in, args.delay_in, loss_str, rate_str))
+	sleep(2)
+
     # Retrieve nodes.
 	h1 = net.getNodeByName('h1')
 	h2 = net.getNodeByName('h2')

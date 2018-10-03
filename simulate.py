@@ -12,7 +12,7 @@ parse.add_argument('--bwsegs', '-b',
 	type = int,
 	action = "store",
 	help="Number of bandwidth slices",
-	default = 7)
+	default = 5)
 
 parse.add_argument('--qsegs', '-q',
 	dest="num_q",
@@ -77,6 +77,7 @@ def parse_ping_file():
     return ping_av
 
 def run_net(l, b, q, d):
+    print "---------------------------------"
     print "Calling subprocess for BW=%s, Q=%s, L=%s, D=%s" % (b, q, l, d)
     cmd = ['sudo', 'python', 'nodes.py', 
         '-b', b, '-q', q, '-l', l, '-d', d]
@@ -87,6 +88,7 @@ def run_net(l, b, q, d):
     ping_av = parse_ping_file()
     # TODO: Get MSS right.
     toret = (perf_av * ping_av)/1448
+    print " "
     return toret
 
 
@@ -97,7 +99,7 @@ def simulate():
     bw_max = 10000
     q_min = 5
     q_max = 30
-    l_min = math.log(0.01, math.e) # e^l_min = .01
+    l_min = math.log(0.0001, math.e) # e^l_min = .0001
     l_max = math.log(5.0, math.e) #e^l_max = 5
     delay = '15ms' # | -- 15 -- | -- 15 -- | --> 60ms
     open('output/data.txt', 'w').close()
