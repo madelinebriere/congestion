@@ -12,14 +12,14 @@ parse.add_argument('--bwsegs', '-b',
 	type = int,
 	action = "store",
 	help="Number of bandwidth slices",
-	default = 3)
+	default = 7)
 
 parse.add_argument('--qsegs', '-q',
 	dest="num_q",
 	type = int,
 	action="store",
 	help="Number of queue slices",
-	default = 2)
+	default = 5)
 
 parse.add_argument('--lsegs', '-l',
 	dest="num_l",
@@ -105,7 +105,7 @@ def simulate():
     open('output/ping-recv.txt', 'w').close()
 
     try:
-        for l in np.logspace(l_min, l_max, args.num_l, base=math.e):
+        for l in np.logspace(l_max, l_min, args.num_l, base=math.e):
             l_str = str(l)
             y_total=0
             y_count=0
