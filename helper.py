@@ -11,6 +11,7 @@ if os.uname()[0] == "Darwin":
 else:
     m.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator, FormatStrFormatter
 import argparse
 import math
 #import termcolor as T
@@ -20,7 +21,7 @@ def read_list(fname, delim=','):
     ret = []
     for l in lines:
         ls = l.strip().split(delim)
-        ls = map(lambda e: '0' if e.strip() == '' or e.strip() == 'ms' or e.strip() == 's' else e, ls)
+        ls = map(lambda e: '0' if e.strip() == '' or e.strip() == 'ms' or e.strip() == 's' else e.strip(), ls)
         ret.append(ls)
     return ret
 
