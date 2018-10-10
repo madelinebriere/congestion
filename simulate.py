@@ -12,14 +12,14 @@ parse.add_argument('--bwsegs', '-b',
 	type = int,
 	action = "store",
 	help="Number of bandwidth slices",
-	default = 5)
+	default = 3)
 
 parse.add_argument('--qsegs', '-q',
 	dest="num_q",
 	type = int,
 	action="store",
 	help="Number of queue slices",
-	default = 5)
+	default = 3)
 
 parse.add_argument('--lsegs', '-l',
 	dest="num_l",
@@ -87,7 +87,7 @@ def run_net(l, b, q, d):
     # Parse ping file.
     ping_av = parse_ping_file()
     # TODO: Get MSS right.
-    toret = (perf_av * ping_av)/1448
+    toret = (perf_av * ping_av)/(1448*8)
     print " "
     return toret
 
@@ -107,15 +107,15 @@ def simulate():
     open('output/ping-recv.txt', 'w').close()
 
     try:
-        for l in np.logspace(l_max, l_min, args.num_l, base=math.e):
+        for l in np.logspace(l_min, l_max, args.num_l, base=math.e):
             l_str = str(l)
             y_total=0
             y_count=0
             # Average over range of bandwidths.
-            for i in range(bw_max, bw_min-1, -(bw_max-bw_min)/(args.num_bw)):
+            for i in range(bw_max, bw_min-1, -(bw_max-bw_min)/(args.num_bw-1)):
                 b_str = str(float(i)/1000)
                 # Average over range of queue sizes.
-                for j in range(q_max, q_min-1, -(q_max-q_min)/(args.num_q)):
+                for j in range(q_max, q_min-1, -(q_max-q_min)/(args.num_q-1)):
                     q_str = str(j)
                     y_total+=run_net(l_str, b_str, q_str, delay)
                     y_count+=1
