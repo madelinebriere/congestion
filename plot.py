@@ -19,6 +19,7 @@ def plot():
     y_plot = func(loss, *popt)
 
     popt_calc, pcov_calc = curve_fit(func_lin, loss, y)
+    
     print "C = %s" % popt_calc[1]
     
     format(helper.plt)

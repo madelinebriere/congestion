@@ -103,8 +103,8 @@ def simulate():
     # TODO: Need just 28 data points. More accurate.
     bw_min = 10
     bw_max = 10000
-    q_min = 5
-    q_max = 30
+    q_min = 75
+    q_max = 100
     l_min = math.log(0.01, math.e)
     l_max = math.log(5, math.e)
     delay = '15ms' # | -- 15 -- | -- 15 -- | --> 60ms
