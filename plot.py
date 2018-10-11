@@ -6,7 +6,7 @@ def plot():
     data = helper.read_list("output/data.txt")
     loss = [float(item[0]) for item in data]
     y = [float(item[1]) for item in data]
-    loss_theory = [.0001, 5]
+    loss_theory = [.0001, .05]
     y_theory = [1.0/helper.math.sqrt(item) for item in loss_theory]
     
     format(helper.plt)
