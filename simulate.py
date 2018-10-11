@@ -112,10 +112,10 @@ def simulate():
             y_total=0
             y_count=0
             # Average over range of bandwidths.
-            for i in range(bw_max, bw_min-1, -(bw_max-bw_min)/(args.num_bw-1)):
+            for i in range(bw_max, bw_min-2, -(bw_max-bw_min)/(args.num_bw-1)):
                 b_str = str(float(i)/1000)
                 # Average over range of queue sizes.
-                for j in range(q_max, q_min-1, -(q_max-q_min)/(args.num_q-1)):
+                for j in range(q_max, q_min-2, -(q_max-q_min)/(args.num_q-1)):
                     q_str = str(j)
                     y_total+=run_net(l_str, b_str, q_str, delay)
                     y_count+=1
