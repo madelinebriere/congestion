@@ -19,7 +19,7 @@ parse.add_argument('--qsegs', '-q',
 	type = int,
 	action="store",
 	help="Number of queue slices",
-	default = 3)
+	default = 6)
 
 parse.add_argument('--lsegs', '-l',
 	dest="num_l",
