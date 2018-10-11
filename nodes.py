@@ -48,6 +48,13 @@ parse.add_argument('--loss', '-l',
 	action= "store",
 	default=2)
 
+parse.add_argument('--timeout', '-t',
+	dest="t_in",
+	type = float,
+	help = "timeout for loss measurements",
+	action = "store",
+	default = 45)
+
 args=parse.parse_args()
 
 class NodeGenerator(Topo):
@@ -84,18 +91,22 @@ def launchNet():
 
 	# Launch basic traffic ... measure bandwidth.
 	# Reference: How to generate traffic in a network topology.
-	# Shivakumar 2013
+	# Shivakumar 2013]
 	print "Launching iperf: Measuring BW"
 	h2.cmd('iperf -s -w 32m -m 1024 -p 5001 -i 1 > output/iperf-recv.txt &')
 
-	# Send 3600 packets
-	# Or Run for 3600 seconds
 	print "Launching ping: Measuring RTTM"
-	h1.cmd('ping -c 2000 -i 1 10.0.0.2 > output/ping-recv.txt &')
+	h1.cmd('ping -i 1 10.0.0.2 > output/ping-recv.txt &')
 
 	print "Streaming large file"
-	h2.cmd('nc -l 5001 > /dev/null/')
-	h1.cmd('nc 10.0.0.2 5001 < input/big_file.txt')
+	h2.cmd('nc -l 5001 > /dev/null/ &')
+	h1.cmd('nc 10.0.0.2 5001 < input/big_file.txt &')
+
+	sleep(args.t_in)
+
+	Popen("pkill -KILL iperf", shell=True).wait()
+	Popen("pkill -KILL ping", shell=True).wait()
+	Popen("pkill -KILL nc", shell=True).wait()
 
 	net.stop()
 
