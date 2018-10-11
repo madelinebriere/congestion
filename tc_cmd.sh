@@ -18,6 +18,8 @@ function add_qdisc {
 
     tc qdisc add dev $dev parent 1:1 handle 10: netem delay $delay limit $qlen loss $loss
 
+    ifconfig $dev mtu 1064
+
     echo parameters added
 }
 

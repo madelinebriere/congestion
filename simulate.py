@@ -19,7 +19,7 @@ parse.add_argument('--qsegs', '-q',
 	type = int,
 	action="store",
 	help="Number of queue slices",
-	default = 3)
+	default = 6)
 
 parse.add_argument('--lsegs', '-l',
 	dest="num_l",
@@ -42,9 +42,15 @@ def parse_perf_file():
                 perf_count+=1
             except:
                 pass
-        if((len(perf_parsed) == 9) and ('Mbits' in perf_parsed[8])):
+        elif((len(perf_parsed) == 9) and ('Mbits' in perf_parsed[8])):
             try:
                 perf_total+=float(perf_parsed[7])*1000000
+                perf_count+=1
+            except:
+                   pass
+        elif((len(perf_parsed) == 9) and ('bits' in perf_parsed[8])):
+            try:
+                perf_total+=float(perf_parsed[7])
                 perf_count+=1
             except:
                    pass
@@ -87,7 +93,7 @@ def run_net(l, b, q, d):
     # Parse ping file.
     ping_av = parse_ping_file()
     # TODO: Get MSS right.
-    toret = (perf_av * ping_av)/(1448*8)
+    toret = (perf_av * ping_av)/(1024*8)
     print " "
     return toret
 
@@ -99,8 +105,8 @@ def simulate():
     bw_max = 10000
     q_min = 5
     q_max = 30
-    l_min = math.log(0.0001, math.e) # e^l_min = .0001
-    l_max = math.log(5.0, math.e) #e^l_max = 5
+    l_min = math.log(0.01, math.e)
+    l_max = math.log(5, math.e)
     delay = '15ms' # | -- 15 -- | -- 15 -- | --> 60ms
     open('output/data.txt', 'w').close()
     open('output/iperf-recv.txt', 'w').close() 
@@ -112,10 +118,10 @@ def simulate():
             y_total=0
             y_count=0
             # Average over range of bandwidths.
-            for i in range(bw_max, bw_min-2, -(bw_max-bw_min)/(args.num_bw-1)):
+            for i in range(bw_max, bw_min-1, -(bw_max-bw_min)/(args.num_bw-1)):
                 b_str = str(float(i)/1000)
                 # Average over range of queue sizes.
-                for j in range(q_max, q_min-2, -(q_max-q_min)/(args.num_q-1)):
+                for j in range(q_max, q_min-1, -(q_max-q_min)/(args.num_q-1)):
                     q_str = str(j)
                     y_total+=run_net(l_str, b_str, q_str, delay)
                     y_count+=1

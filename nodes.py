@@ -53,7 +53,7 @@ parse.add_argument('--timeout', '-t',
 	type = float,
 	help = "timeout for loss measurements",
 	action = "store",
-	default = 45)
+	default = 15)
 
 args=parse.parse_args()
 
@@ -93,7 +93,7 @@ def launchNet():
 	# Reference: How to generate traffic in a network topology.
 	# Shivakumar 2013]
 	print "Launching iperf: Measuring BW"
-	h2.cmd('iperf -s -w 32m -m 1024 -p 5001 -i 1 > output/iperf-recv.txt &')
+	h2.cmd('iperf -s -w 32m -M 1024 -p 5001 -i 1 > output/iperf-recv.txt &')
 
 	print "Launching ping: Measuring RTTM"
 	h1.cmd('ping -i 1 10.0.0.2 > output/ping-recv.txt &')
