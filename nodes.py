@@ -53,7 +53,7 @@ parse.add_argument('--timeout', '-t',
 	type = float,
 	help = "timeout for loss measurements",
 	action = "store",
-	default = 15)
+	default = 8)
 
 args=parse.parse_args()
 
